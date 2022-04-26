@@ -1,12 +1,11 @@
-import { useRef, useState,Fragment  } from 'react';
-import { Prompt } from 'react-router-dom';
+import { useRef, useState, Fragment } from "react";
+import { Prompt } from "react-router-dom";
 
-import Card from '../UI/Card';
-import LoadingSpinner from '../UI/LoadingSpinner';
-import classes from './QuoteForm.module.css';
+import Card from "../UI/Card";
+import LoadingSpinner from "../UI/LoadingSpinner";
+import classes from "./QuoteForm.module.css";
 
 const QuoteForm = (props) => {
-
   const [isEntering, setIsEntering] = useState(false);
 
   const authorInputRef = useRef();
@@ -18,48 +17,62 @@ const QuoteForm = (props) => {
     const enteredAuthor = authorInputRef.current.value;
     const enteredText = textInputRef.current.value;
 
-    // optional: Could validate here
-
-    if (enteredText.trim().length === 0) {
+    if (enteredAuthor.trim().length <= 0) {
+      authorInputRef.current.focus();
+      return;
+    }
+    if (enteredText.trim().length <= 0) {
+      textInputRef.current.focus();
       return;
     }
 
     props.onAddQuote({ author: enteredAuthor, text: enteredText });
   }
 
-  const formFocusedHandler =()=>{
+  const formFocusedHandler = () => {
     setIsEntering(true);
-  }
+  };
 
-  const finishEnteringHandler =()=>{
-    setIsEntering(false)
-  }
+  const finishEnteringHandler = () => {
+    setIsEntering(false);
+  };
 
   return (
     <Fragment>
-      <Prompt when={isEntering} message={(location) => 'Are you sure you want to leave ? All your entered data will be lost!'}/>
-    <Card>
-      <form onFocus={formFocusedHandler} className={classes.form} onSubmit={submitFormHandler}>
-        {props.isLoading && (
-          <div className={classes.loading}>
-            <LoadingSpinner />
-          </div>
-        )}
+      <Prompt
+        when={isEntering}
+        message={(location) =>
+          "Are you sure you want to leave ? All your entered data will be lost!"
+        }
+      />
+      <Card>
+        <form
+          onFocus={formFocusedHandler}
+          className={classes.form}
+          onSubmit={submitFormHandler}
+        >
+          {props.isLoading && (
+            <div className={classes.loading}>
+              <LoadingSpinner />
+            </div>
+          )}
 
-        <div className={classes.control}>
-          <label htmlFor='author'>Author</label>
-          <input type='text' id='author' ref={authorInputRef} />
-        </div>
-        <div className={classes.control}>
-          <label htmlFor='text'>Text</label>
-          <textarea id='text' rows='5' ref={textInputRef}></textarea>
-        </div>
-        <div className={classes.actions}>
-          <button onClick={finishEnteringHandler} className='btn'>Add Quote</button>
-        </div>
-      </form>
-    </Card>
-        </Fragment>
+          <div className={classes.control}>
+            <label htmlFor="author">Author</label>
+            <input type="text" id="author" ref={authorInputRef} />
+          </div>
+          <div className={classes.control}>
+            <label htmlFor="text">Text</label>
+            <textarea id="text" rows="5" ref={textInputRef}></textarea>
+          </div>
+          <div className={classes.actions}>
+            <button onClick={finishEnteringHandler} className="btn">
+              Add Quote
+            </button>
+          </div>
+        </form>
+      </Card>
+    </Fragment>
   );
 };
 
